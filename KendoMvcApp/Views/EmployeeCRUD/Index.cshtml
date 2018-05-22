@@ -1,0 +1,61 @@
+﻿@model KendoMvcApp.Models.Employee
+
+@{
+    ViewBag.Title = "EmployeeCRUD";
+
+}
+
+<h2>EmployeeCRUD</h2>
+
+<div class="container">
+    <div class="row">
+
+        @(Html.Kendo().Grid<KendoMvcApp.Models.Employee>()
+            .Name("EmpGrid")
+            .Selectable()
+            .Columns(columns =>
+            {
+        //  columns.Bound(c => c.EmployeeID);
+        columns.Bound(c => c.FirstName);
+                columns.Bound(c => c.LastName);
+                columns.Command(command =>
+                {
+                    command.Edit();
+                    command.Destroy();
+                }).Width(200);
+
+            })
+            .DataSource(dataSource => dataSource
+                .Ajax()
+                .Model(model =>
+                {
+                    model.Id(emp => emp.EmployeeID);
+                    model.Field(emp => emp.EmployeeID).Editable(false);
+                }
+                )
+                .Read(read => read.Action("GetAllEmployee", "EmployeesCRUD"))
+              .Update(update => update.Action("UpdateEmployee", "EmployeesCRUD"))
+              .Create(create => create.Action("AddEmployee", "EmployeesCRUD"))
+              .Destroy(destroy => destroy.Action("DeleteEmployee", "EmployeesCRUD"))
+
+                )
+           .ToolBar(toolbar => toolbar.Create())
+
+           // Set grid editable.
+           .Editable(editable => editable.Mode(GridEditMode.InLine))
+
+            // Set grid sortable.
+            .Sortable()
+
+            // Set grid selectable.
+            .Selectable()
+
+            // Set grid pagable.
+            .Pageable(pageable =>
+            {
+                pageable.Refresh(true);
+                pageable.PageSizes(true);
+            })
+        )
+    </div>
+</div>  
